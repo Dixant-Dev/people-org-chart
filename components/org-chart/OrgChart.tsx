@@ -140,12 +140,12 @@ export default function OrgChart() {
   }, [query])
 
   // 🔹 Memoize flattened tree (optional but good)
-  const allEmployees = useMemo(() => {
-    if (tree) return flattenTree(tree)
-    return flattenTree(mockOrgChart) // fallback
-  }, [tree])
+  // const allEmployees = useMemo(() => {
+  //   if (tree) return flattenTree(tree)
+  //   return flattenTree(mockOrgChart) // fallback
+  // }, [tree])
 
-  // const allEmployees = useMemo(() => (tree ? flattenTree(tree) : []), [tree])
+  const allEmployees = useMemo(() => (tree ? flattenTree(tree) : []), [tree])
 
   const filteredEmployees = useMemo(() => {
     if (!query.trim()) return []
