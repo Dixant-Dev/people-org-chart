@@ -1,75 +1,8 @@
-// "use client"
-
-// import { OrgTreeNode } from "@/types/employee"
-// import { PiIdentificationBadge } from "react-icons/pi"
-
-// export default function OrgNode({
-//   node,
-//   onSelect,
-// }: {
-//   node: OrgTreeNode
-//   onSelect?: (node: OrgTreeNode) => void
-// }) {
-//   return (
-//     <div
-//       onClick={() => onSelect?.(node)}
-//       className="
-//         w-[297px] h-[100px]
-//         rounded-[8px]
-//         border border-[#DBDBDB]
-//         bg-white
-//         pt-[18px] pr-[14px] pb-[18px] pl-[14px]
-//         flex items-center gap-[10px]
-//         cursor-pointer
-//         hover:shadow-sm
-//         transition
-//       "
-//     >
-//       {/* Avatar */}
-//       <img
-//         src={node.pic || ""}
-//         alt={node.target}
-//         className="h-10 w-10 rounded-full object-cover"
-//       />
-
-//       {/* Text content */}
-//       <div className="flex-1">
-//         {/* Name + badge */}
-//         <div className="flex justify-between items-center gap-1">
-//           <p className="text-sm font-semibold text-gray-900 leading-tight">
-//             {node.target.trim()}
-//           </p>
-
-//           {/* Identification badge */}
-//           <span className="text-indigo-600">
-//             <PiIdentificationBadge />
-//           </span>
-//         </div>
-
-//         {/* Role */}
-//         <p className="text-xs text-gray-500 leading-tight mt-1">
-//           Chief Executive Officer
-//         </p>
-
-//         {/* Stats */}
-//         <p className="text-xs text-gray-900 mt-2">
-//           {node.direct_reports} / {node.indirect_reports || 1013}
-//         </p>
-//       </div>
-//     </div>
-//   )
-// }
-
 "use client"
 
 import { OrgTreeNode } from "@/types/employee"
 import { useEffect, useRef, useState } from "react"
-import {
-  PiIdentificationBadge,
-  PiCaretDown,
-  PiCaretRight,
-  PiCaretUp,
-} from "react-icons/pi"
+import { PiIdentificationBadge, PiCaretDown, PiCaretUp } from "react-icons/pi"
 
 export default function OrgNode({
   node,
@@ -87,7 +20,6 @@ export default function OrgNode({
   })
 
   const hasChildren = node.children && node.children.length > 0
-  const hasMultipleChildren = node.children && node.children.length > 1
 
   useEffect(() => {
     if (!expanded) return
@@ -108,11 +40,9 @@ export default function OrgNode({
 
   return (
     <div className="flex flex-col items-center">
-      {/* CARD */}
       <div
         onClick={(e) => {
           e.stopPropagation()
-          setExpanded((prev) => !prev)
           onSelect?.(node)
         }}
         className="
@@ -127,37 +57,34 @@ export default function OrgNode({
           transition
         "
       >
-        {/* Avatar */}
         <img
-          src={node.pic || ""}
-          alt={node.target}
+          src={node.pic || null}
+          alt={node.target?.trim() || "Unnamed Employee"}
           className="h-10 w-10 rounded-full object-cover"
         />
 
-        {/* Text */}
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <p className="text-sm font-semibold text-gray-900">
-              {node.target.trim()}
+              {node.target?.trim() || "Unnamed Employee"}
             </p>
             <PiIdentificationBadge className="text-indigo-600" />
           </div>
 
-          <p className="text-xs text-gray-500 mt-1">Chief Executive Officer</p>
+          <p className="text-xs text-gray-500 mt-1">
+            {node.relationship_id || "Role unavailable"}
+          </p>
 
           <p className="text-xs text-gray-900 mt-2">
-            {node.direct_reports} / {node.indirect_reports || 1013}
+            {node.direct_reports} / {node.indirect_reports}
           </p>
         </div>
       </div>
 
-      {/* CONNECTORS + CHILDREN */}
       {hasChildren && (
         <>
-          {/* Vertical line from parent */}
           <div className="h-6 w-px bg-gray-300" />
 
-          {/* Expand / Collapse Pill */}
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -171,20 +98,17 @@ export default function OrgNode({
         bg-white
         text-xs text-gray-700
         hover:bg-gray-50
-        shadow-sm
+        shadow-sm cursor-pointer
       "
           >
             <span>Contains {node.children.length}</span>
             {expanded ? <PiCaretUp /> : <PiCaretDown />}
           </button>
 
-          {/* Vertical line below pill */}
-          <div className="h-6 w-px bg-gray-300" />
+          {expanded && <div className="h-6 w-px bg-gray-300" />}
 
-          {/* CHILDREN */}
           {expanded && (
             <div className="relative flex justify-center">
-              {/* Dynamic horizontal connector */}
               {node.children.length > 1 && (
                 <div
                   className="absolute top-0 h-px bg-gray-300"
@@ -208,7 +132,6 @@ export default function OrgNode({
                     }
                     className="flex flex-col items-center relative"
                   >
-                    {/* Vertical line above child */}
                     <div className="h-6 w-px bg-gray-300" />
 
                     <OrgNode node={child} onSelect={onSelect} />

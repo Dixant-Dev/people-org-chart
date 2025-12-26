@@ -34,9 +34,6 @@ export default function TopHeader() {
         <PiBell className="text-lg text-muted-foreground cursor-pointer" />
         <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
       </div>
-
-      {/* Avatar */}
-      {/* <div className="h-8 w-8 rounded-full border bg-muted" /> */}
     </header>
   )
 }

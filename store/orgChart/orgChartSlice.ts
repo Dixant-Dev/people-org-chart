@@ -26,7 +26,7 @@ const orgChartSlice = createSlice({
       })
       .addCase(fetchOrgChart.fulfilled, (state, action) => {
         state.loading = false
-        state.tree = action.payload // 👈 IMPORTANT
+        state.tree = action.payload
       })
       .addCase(fetchOrgChart.rejected, (state, action) => {
         state.loading = false

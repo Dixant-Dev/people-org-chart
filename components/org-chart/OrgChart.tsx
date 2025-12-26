@@ -21,6 +21,12 @@ export default function OrgChart() {
   const [selectedEmployee, setSelectedEmployee] = useState<OrgTreeNode | null>(
     null
   )
+
+  const [searchSelectedEmployee, setSearchSelectedEmployee] =
+    useState<OrgTreeNode | null>(null)
+
+  const [drawerEmployee, setDrawerEmployee] = useState<OrgTreeNode | null>(null)
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const [query, setQuery] = useState("")
@@ -125,25 +131,12 @@ export default function OrgChart() {
     )
   }, [dispatch])
 
-  // 🔹 Debounce search
-
-  // useEffect(() => {
-  //   console.log("📦 DISPATCHING THUNK")
-  //   dispatch(fetchOrgChart({ employeeId: 29, token: "test" }))
-  // }, [dispatch])
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query)
     }, 300)
     return () => clearTimeout(timer)
   }, [query])
-
-  // 🔹 Memoize flattened tree (optional but good)
-  // const allEmployees = useMemo(() => {
-  //   if (tree) return flattenTree(tree)
-  //   return flattenTree(mockOrgChart) // fallback
-  // }, [tree])
 
   const allEmployees = useMemo(() => (tree ? flattenTree(tree) : []), [tree])
 
@@ -161,85 +154,30 @@ export default function OrgChart() {
         <OrgHeader />
         <OrgTabs />
 
-        <div className="mt-6">
-          <OrgSearch
-            value={query}
-            onChange={setQuery}
-            selectedEmployee={selectedEmployee?.target ?? null}
-            onClearSelected={() => {
-              setSelectedEmployee(null)
-              setConfirmedEmployee(null) // 🔑 important
-              setQuery("")
-            }}
-            suggestions={filteredEmployees}
-            onSelectEmployee={(emp) => {
-              setConfirmedEmployee(emp) // 🔑 confirm selection
-              setSelectedEmployee(emp)
-            }}
-          />
-        </div>
+        <OrgSearch
+          value={query}
+          onChange={setQuery}
+          selectedEmployee={searchSelectedEmployee?.target ?? null}
+          onClearSelected={() => {
+            setSearchSelectedEmployee(null)
+            setConfirmedEmployee(null)
+            setQuery("")
+          }}
+          suggestions={filteredEmployees}
+          onSelectEmployee={(emp) => {
+            setSearchSelectedEmployee(emp)
+            setConfirmedEmployee(emp)
+            setSelectedEmployee(emp)
+          }}
+        />
 
-        {/* 🧱 ORG CHART CANVAS */}
-        <div className="relative mt-2 flex-1 overflow-hidden">
-          {/* Floating controls */}
+        <div className="relative flex-1 overflow-hidden">
           <OrgControls
             scale={scale}
             onZoomIn={zoomIn}
             onZoomOut={zoomOut}
             onFit={fitToScreen}
           />
-
-          {/* Zoom & Pan Canvas */}
-          {/* <div
-            className="
-    absolute inset-0
-    z-10
-    overflow-hidden
-    cursor-grab
-    select-none
-  "
-            onMouseDown={onMouseDown}
-            onMouseMove={onMouseMove}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseUp}
-            onWheel={onWheel}
-          >
-            <div
-              ref={chartRef}
-              style={{
-                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                transformOrigin: "0 0",
-              }}
-              className="min-h-[800px] flex justify-center pt-10 transition-transform"
-            >
-              {debouncedQuery ? (
-                filteredEmployees.length > 0 ? (
-                  <div className="flex flex-col items-center gap-4">
-                    {filteredEmployees.map((emp) => (
-                      <OrgNode
-                        key={emp.employee_id}
-                        node={emp}
-                        onSelect={(emp) => {
-                          setSelectedEmployee(emp)
-                          setIsDrawerOpen(true)
-                        }}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500">No matching employee found</p>
-                )
-              ) : (
-                <OrgNode
-                  node={mockOrgChart}
-                  onSelect={(emp) => {
-                    setSelectedEmployee(emp)
-                    setIsDrawerOpen(true)
-                  }}
-                />
-              )}
-            </div>
-          </div> */}
 
           <div
             className="
@@ -264,13 +202,18 @@ export default function OrgChart() {
               className="min-h-[800px] flex justify-center pt-10 transition-transform"
             >
               {loading && <p className="text-gray-500">Loading org chart…</p>}
-              {error && <p className="text-red-500">{error}</p>}
+              {error && (
+                <div className="text-sm text-gray-500 mt-4">
+                  Unable to load full organization data. Showing limited or
+                  fallback information.
+                </div>
+              )}
 
               {confirmedEmployee ? (
                 <OrgNode
                   node={confirmedEmployee}
                   onSelect={(emp) => {
-                    setSelectedEmployee(emp)
+                    setDrawerEmployee(emp)
                     setIsDrawerOpen(true)
                   }}
                 />
@@ -279,7 +222,7 @@ export default function OrgChart() {
                   <OrgNode
                     node={tree}
                     onSelect={(emp) => {
-                      setSelectedEmployee(emp)
+                      setDrawerEmployee(emp)
                       setIsDrawerOpen(true)
                     }}
                   />
@@ -290,9 +233,8 @@ export default function OrgChart() {
         </div>
       </div>
 
-      {/* DRAWER */}
       <EmployeeDrawer
-        employee={isDrawerOpen ? selectedEmployee : null}
+        employee={isDrawerOpen ? drawerEmployee : null}
         onClose={() => setIsDrawerOpen(false)}
       />
     </div>

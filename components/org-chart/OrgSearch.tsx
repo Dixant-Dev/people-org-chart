@@ -22,21 +22,22 @@ export default function OrgSearch({
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="relative w-full rounded-xl border bg-white px-4 py-3 shadow-sm">
+    <div className="relative w-full rounded-xl border bg-white px-4 py-3 shadow-sm mb-4">
       <div className="flex items-center gap-3">
         <PiMagnifyingGlass className="text-gray-400 text-lg" />
 
-        {/* Selected employee pill */}
         {selectedEmployee && (
           <div className="flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-sm text-indigo-700">
             <span>{selectedEmployee}</span>
-            <button onClick={onClearSelected} className="hover:text-indigo-900">
+            <button
+              onClick={onClearSelected}
+              className="hover:text-indigo-900 cursor-pointer"
+            >
               <PiPencilSimpleLine />
             </button>
           </div>
         )}
 
-        {/* Input */}
         <input
           type="text"
           placeholder="Search employee"
@@ -75,8 +76,7 @@ export default function OrgSearch({
         />
       </div>
 
-      {/* Suggestions */}
-      {open && suggestions.length > 0 && (
+      {/* {open && suggestions.length > 0 && (
         <div className="absolute left-0 top-full z-50 mt-2 w-full rounded-xl border bg-white shadow-lg max-h-64 overflow-auto">
           {suggestions.map((emp) => (
             <button
@@ -91,6 +91,32 @@ export default function OrgSearch({
               <p className="text-sm font-medium">{emp.target}</p>
             </button>
           ))}
+        </div>
+      )} */}
+      {/* Suggestions / Empty state */}
+      {open && value.trim().length > 0 && (
+        <div className="absolute left-0 top-full z-50 mt-2 w-full rounded-xl border bg-white shadow-lg max-h-64 overflow-auto">
+          {suggestions.length > 0 ? (
+            suggestions.map((emp) => (
+              <button
+                key={emp.employee_id}
+                onClick={() => {
+                  onSelectEmployee(emp)
+                  onChange("")
+                  setOpen(false)
+                }}
+                className="w-full px-4 py-2 text-left hover:bg-gray-50"
+              >
+                <p className="text-sm font-medium text-gray-900">
+                  {emp.target}
+                </p>
+              </button>
+            ))
+          ) : (
+            <div className="px-4 py-3 text-sm text-gray-500">
+              No employees found
+            </div>
+          )}
         </div>
       )}
     </div>

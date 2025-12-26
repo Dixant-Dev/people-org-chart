@@ -1,4 +1,3 @@
-// store/orgChart/orgChartThunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { fetchOrgChartApi } from "@/services/orgChartApi"
 
@@ -9,13 +8,12 @@ export const fetchOrgChart = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log("🔥 THUNK EXECUTED")
       const data = await fetchOrgChartApi(employeeId, token)
-      console.log("🔥 DATA RETURNED FROM API:", data)
       return data
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to fetch org chart"
+        err.response?.data?.user_info ||
+          "Org chart data is currently unavailable"
       )
     }
   }

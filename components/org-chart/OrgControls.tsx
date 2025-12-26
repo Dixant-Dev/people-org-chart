@@ -12,8 +12,7 @@ export default function OrgControls({
   onFit: () => void
 }) {
   return (
-    <div className="absolute right-6 top-6 z-50 rounded-xl bg-white shadow-md p-2 flex items-center gap-2">
-      {/* Zoom out */}
+    <div className="absolute right-6 z-50 rounded-xl bg-white shadow-md p-2 flex items-center gap-2">
       <button
         onClick={onZoomOut}
         className="h-8 w-8 rounded-md hover:bg-gray-100 flex items-center justify-center cursor-pointer"
@@ -21,18 +20,10 @@ export default function OrgControls({
         <PiMinus />
       </button>
 
-      {/* Zoom percentage */}
       <span className="text-sm w-10 text-center">
         {Math.round(scale * 100)}
       </span>
 
-      {/* Zoom in */}
-      {/* <button
-        onClick={onZoomIn}
-        className="h-8 w-8 rounded-md hover:bg-gray-100 flex items-center justify-center"
-      >
-        <PiPlus />
-      </button> */}
       <button
         onClick={() => {
           onZoomIn()
@@ -42,12 +33,10 @@ export default function OrgControls({
         <PiPlus />
       </button>
 
-      {/* Download (future) */}
       <button className="h-8 w-8 rounded-md hover:bg-gray-100 flex items-center justify-center">
         <PiDownloadSimple />
       </button>
 
-      {/* Eye (future) */}
       <button
         onClick={onFit}
         className="h-8 w-8 rounded-md hover:bg-gray-100 flex items-center justify-center cursor-pointer"

@@ -18,20 +18,30 @@ const items = [
   { label: "Workplace", icon: PiUsersThree },
 ]
 
-function Row({ label, value }: { label: string; value: string }) {
+// function Row({ label, value }: { label: string; value: string }) {
+//   return (
+//     <div className="flex justify-between gap-4">
+//       <span className="text-gray-500">{label}</span>
+//       <span className="font-medium text-gray-900">{value}</span>
+//     </div>
+//   )
+// }
+
+function Row({ label, value }: { label: string; value?: string }) {
   return (
-    <div className="flex justify-between gap-4">
+    <div className="flex justify-between gap-4 text-sm">
       <span className="text-gray-500">{label}</span>
-      <span className="font-medium text-gray-900">{value}</span>
+      <span className="text-gray-900">
+        {value && value.trim() !== "" ? value : "Not available"}
+      </span>
     </div>
   )
 }
 
 export default function AccountDetails() {
   return (
-    <div className="p-4">
-      {/* Section title */}
-      <p className="mb-3 text-xs font-semibold tracking-widest text-gray-400">
+    <div className="">
+      <p className="mb-3 text-xs tracking-widest text-gray-400">
         ACCOUNT DETAILS
       </p>
 
@@ -42,31 +52,27 @@ export default function AccountDetails() {
             value={label}
             className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden"
           >
-            {/* HEADER */}
             <AccordionPrimitive.Header>
               <AccordionPrimitive.Trigger
                 className="
                   w-full
                   flex items-center justify-between
-                  px-4 py-4
+                  px-4 py-2
                   text-left
                   hover:bg-gray-100
                   transition
                   group
+                  cursor-pointer
                 "
               >
-                {/* Left */}
-                <div className="flex items-center gap-3">
-                  <Icon className="text-green-600 text-xl" />
-                  <span className="text-base font-semibold text-gray-900">
-                    {label}
-                  </span>
+                <div className="flex items-center gap-3 ">
+                  <Icon className="text-green-600 text-sm" />
+                  <span className=" text-gray-900">{label}</span>
                 </div>
 
-                {/* Chevron */}
                 <PiCaretRight
                   className="
-                    text-gray-400 text-xl
+                    text-gray-400 text-sm
                     transition-transform duration-200
                     group-data-[state=open]:rotate-90
                   "
@@ -74,7 +80,6 @@ export default function AccountDetails() {
               </AccordionPrimitive.Trigger>
             </AccordionPrimitive.Header>
 
-            {/* CONTENT */}
             <AccordionPrimitive.Content
               className="
     px-4 pb-4
