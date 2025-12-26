@@ -118,10 +118,8 @@ export default function OrgChart() {
 
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_AUTH_TOKEN
-    console.log("TOKEN: Token", token)
 
     if (!token) return
-    console.log("📦 DISPATCHING THUNK")
 
     dispatch(
       fetchOrgChart({

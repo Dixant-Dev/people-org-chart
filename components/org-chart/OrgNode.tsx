@@ -57,11 +57,24 @@ export default function OrgNode({
           transition
         "
       >
-        <img
-          src={node.pic || null}
-          alt={node.target?.trim() || "Unnamed Employee"}
-          className="h-10 w-10 rounded-full object-cover"
-        />
+        {node.pic ? (
+          <img
+            src={node.pic}
+            alt={node.target?.trim() || "Unnamed Employee"}
+            className="h-10 w-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+            <span className="text-sm font-semibold text-gray-700">
+              {node.target
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </span>
+          </div>
+        )}
 
         <div className="flex-1">
           <div className="flex justify-between items-center">
